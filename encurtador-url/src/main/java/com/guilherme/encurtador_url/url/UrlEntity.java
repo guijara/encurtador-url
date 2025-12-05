@@ -1,12 +1,24 @@
 package com.guilherme.encurtador_url.url;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "urls")
+@Data
 public class UrlEntity {
+
+    public UrlEntity() {
+
+    }
+
+    public UrlEntity(String originalUrl) {
+        this.originalUrl = originalUrl;
+    }
+
+    @SequenceGenerator(initialValue = 100000)
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +31,4 @@ public class UrlEntity {
     private String shortUrl;
 
     private LocalDateTime creationAt;
-
-
 }
