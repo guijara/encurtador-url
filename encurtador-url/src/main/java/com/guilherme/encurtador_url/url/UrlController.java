@@ -7,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/url")
 public class UrlController {
@@ -20,7 +18,9 @@ public class UrlController {
 
     @PostMapping
     public ResponseEntity<UrlResponseDto> postUrl(@RequestBody UrlRequestDto dto){
-        UrlResponseDto dtoResponse = urlService.encurtarUrl(dto.urlOriginal());
+        String shortUrl = urlService.encurtarUrl(dto.urlOriginal());
+        String urlResponse = "http://localhost:8080/" + shortUrl;
+        UrlResponseDto dtoResponse = new UrlResponseDto(urlResponse);
         return ResponseEntity.status(HttpStatus.CREATED).body(dtoResponse);
     }
 }

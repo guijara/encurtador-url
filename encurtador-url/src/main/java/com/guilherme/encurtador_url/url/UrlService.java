@@ -19,7 +19,7 @@ public class UrlService {
     }
 
     @Transactional
-    public UrlResponseDto encurtarUrl(String url) {
+    public String encurtarUrl(String url) {
         UrlEntity urlCriada = new UrlEntity(url);
 
         urlRepository.save(urlCriada);
@@ -28,6 +28,6 @@ public class UrlService {
         String shortUrl = urlMath.encode(id);
         urlCriada.setShortUrl(shortUrl);
 
-        return new UrlResponseDto(shortUrl);
+        return shortUrl;
     }
 }
