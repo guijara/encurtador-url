@@ -1,5 +1,6 @@
 package com.guilherme.encurtador_url.url;
 
+import jakarta.persistence.Index;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,5 +24,15 @@ public class UrlMath {
         s.reverse();
 
         return s.toString();
+    }
+
+    public Long decode(String url) {
+        Long result = 0L;
+
+        for (int i = 0;i < url.length();i++){
+            result = result * 62 + alfabeto.indexOf(url.charAt(i));
+        }
+
+        return result;
     }
 }
