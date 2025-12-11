@@ -18,10 +18,9 @@ public class UrlEntity {
         this.originalUrl = originalUrl;
     }
 
-    @SequenceGenerator(initialValue = 100000)
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(initialValue = 100000, allocationSize = 1)
     private Long id;
 
     @Column(nullable = false)

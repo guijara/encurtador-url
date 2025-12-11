@@ -12,8 +12,11 @@ import java.net.URI;
 @RestController
 public class UrlController {
 
-    @Autowired
     private UrlService urlService;
+
+    public UrlController(UrlService urlService) {
+        this.urlService = urlService;
+    }
 
     @GetMapping("/{shortUrl}")
     public ResponseEntity<Void> getUrl(@PathVariable String shortUrl){
