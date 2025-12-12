@@ -1,6 +1,7 @@
 package com.guilherme.encurtador_url.config.exception;
 
-import com.guilherme.encurtador_url.url.exception.UrlInputException;
+import com.guilherme.encurtador_url.url.exception.UrlConteudoExcetion;
+import com.guilherme.encurtador_url.url.exception.UrlFormatException;
 import com.guilherme.encurtador_url.url.exception.UrlNãoExistenteException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +13,8 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UrlInputException.class)
-    public ResponseEntity<ApiError> UrlInputHandle(UrlInputException exception){
+    @ExceptionHandler(UrlConteudoExcetion.class)
+    public ResponseEntity<ApiError> UrlConteudoHandle(UrlConteudoExcetion exception){
         ApiError apiError = new ApiError(exception.getMessage(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
@@ -22,5 +23,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> UrlNãoExistenteHandle(UrlNãoExistenteException exception){
         ApiError apiError = new ApiError(exception.getMessage(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+    }
+
+    @ExceptionHandler(UrlFormatException.class)
+    public ResponseEntity<ApiError> UrlFormatHandle(UrlFormatException exception){
+        ApiError apiError = new ApiError(exception.getMessage(), LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
 }
