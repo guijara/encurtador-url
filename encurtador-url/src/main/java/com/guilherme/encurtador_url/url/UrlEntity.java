@@ -23,14 +23,15 @@ public class UrlEntity {
     @SequenceGenerator(initialValue = 100000, allocationSize = 1)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "original_url", nullable = false, unique = true)
     private String originalUrl;
 
-    @Column(unique = true)
+    @Column(name = "short_url", nullable = false,unique = true)
     private String shortUrl;
 
-    @Column(nullable = false)
+    @Column(name = "num_clicks", nullable = false)
     private Integer numClicks;
 
+    @Column(name = "creation_date")
     private LocalDateTime creationAt;
 }

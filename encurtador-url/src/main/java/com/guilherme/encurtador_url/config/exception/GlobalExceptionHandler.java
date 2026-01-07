@@ -1,6 +1,6 @@
 package com.guilherme.encurtador_url.config.exception;
 
-import com.guilherme.encurtador_url.url.exception.UrlConteudoExcetion;
+import com.guilherme.encurtador_url.url.exception.UrlConteudoException;
 import com.guilherme.encurtador_url.url.exception.UrlFormatException;
 import com.guilherme.encurtador_url.url.exception.UrlNãoExistenteException;
 import org.springframework.http.HttpStatus;
@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UrlConteudoExcetion.class)
-    public ResponseEntity<ApiError> UrlConteudoHandle(UrlConteudoExcetion exception){
+    @ExceptionHandler(UrlConteudoException.class)
+    public ResponseEntity<ApiError> UrlConteudoHandle(UrlConteudoException exception){
         ApiError apiError = new ApiError(exception.getMessage(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
