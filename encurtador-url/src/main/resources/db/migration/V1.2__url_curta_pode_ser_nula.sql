@@ -1,0 +1,2 @@
+ALTER TABLE urls
+ALTER COLUMN short_url DROP NOT NULL;

@@ -1,6 +1,6 @@
 package com.guilherme.encurtador_url.url;
 
-import com.guilherme.encurtador_url.url.exception.UrlConteudoExcetion;
+import com.guilherme.encurtador_url.url.exception.UrlConteudoException;
 import com.guilherme.encurtador_url.url.exception.UrlFormatException;
 import com.guilherme.encurtador_url.url.exception.UrlNãoExistenteException;
 import jakarta.transaction.Transactional;
@@ -36,7 +36,7 @@ public class UrlService {
 
     private void verificaConteudoUrl(String url){
         if(url == null || url.isBlank()){
-            throw new UrlConteudoExcetion("A url informada não deve ser vazia.");
+            throw new UrlConteudoException("A url informada não deve ser vazia.");
         }
     }
 
@@ -46,8 +46,7 @@ public class UrlService {
         verificaConteudoUrl(url);
         verificaSeUrl(url);
 
-
-        Optional<UrlEntity> urldb = urlRepository.findByUrlOriginalUrl(url);
+        Optional<UrlEntity> urldb = urlRepository.findByOriginalUrl(url);
 
         if (!urldb.isPresent()){
 

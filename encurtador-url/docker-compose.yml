@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # Serviço do Banco de Dados
+  db:
+    image: postgres:latest
+    container_name: postgres-encurtador
+    environment:
+      POSTGRES_DB: encurtador_url
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432" # Mapeia a porta do container para o teu PC
+    volumes:
+      - postgres-data:/var/lib/postgresql/data # Garante que os dados não somem se desligares
+
+  # Serviço da Aplicação Spring
+  app:
+    build: . # Constrói usando o Dockerfile na pasta atual
+    container_name: spring-encurtador
+    ports:
+      - "8080:8080" # Acesso em localhost:8080
+    depends_on:
+      - db # Só inicia depois do banco
+    environment:
+      # AQUI ESTÁ O TRUQUE!
+      # Sobrescrevemos a URL do banco. Em vez de 'localhost', usamos 'db' (nome do serviço acima)
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/encurtador_url
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+volumes:
+  postgres-data:
