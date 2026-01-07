@@ -19,18 +19,18 @@ public class UrlEntity {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(initialValue = 100000, allocationSize = 1)
     private Long id;
 
     @Column(name = "original_url", nullable = false, unique = true)
     private String originalUrl;
 
-    @Column(name = "short_url", nullable = false,unique = true)
+    @Column(name = "short_url", unique = true)
     private String shortUrl;
 
     @Column(name = "num_clicks", nullable = false)
-    private Integer numClicks;
+    private Integer numClicks = 0;
 
     @Column(name = "creation_date")
     private LocalDateTime creationAt;
