@@ -5,7 +5,7 @@
 Este projeto é um estudo prático e aprofundado sobre Engenharia de Software, Design de Sistemas e o ecossistema Spring. O objetivo não é apenas "criar um encurtador", mas entender as decisões arquiteturais, problemas de concorrência, otimização de banco de dados e design de APIs RESTful.
 
 ## 🎯 Objetivos de Aprendizado
-* **Arquitetura:** Clean Architecture, Package by Feature, MVC.
+* **Arquitetura:** MVC, Arquitetura em camadas, Package by Feature.
 * **Algoritmos:** Implementação de conversão de base numérica (Base10 -> Base62) para geração de slugs.
 * **Database:** Modelagem de dados, índices, transações e estratégias de ID.
 * **Qualidade:** Testes de Integração e Unitários, Commit Semântico.
