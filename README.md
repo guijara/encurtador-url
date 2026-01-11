@@ -47,7 +47,7 @@ Envia uma URL longa e recebe o link encurtado.
 * **Exemplo de Corpo (JSON):**
     ```json
     {
-      "url": "[https://www.google.com/search?q=java+spring+boot](https://www.google.com/search?q=java+spring+boot)"
+      "url": "https://www.google.com"
     }
     ```
 
