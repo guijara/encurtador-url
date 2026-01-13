@@ -68,6 +68,7 @@ public class UrlService {
 
                 //esse save é apenas para deixar explicito o salvamento, pois, o @Transactional já garante que ao alterar
                 //o objeto, o Hibernate faça o Dirty Checking e veja que deve enviar um UPDATE para o banco
+                //
 
                 urlRepository.save(urlCriada);
 
