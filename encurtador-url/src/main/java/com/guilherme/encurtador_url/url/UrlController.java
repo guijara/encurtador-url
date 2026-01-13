@@ -3,6 +3,7 @@ package com.guilherme.encurtador_url.url;
 import com.guilherme.encurtador_url.url.dto.UrlRequestDto;
 import com.guilherme.encurtador_url.url.dto.UrlResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,8 @@ import java.net.URI;
 @RestController
 public class UrlController {
 
+    @Value("${api.host.base-url}")
+    private String url;
     private UrlService urlService;
 
     public UrlController(UrlService urlService) {
@@ -27,7 +30,7 @@ public class UrlController {
     @PostMapping("/api/urls")
     public ResponseEntity<UrlResponseDto> postUrl(@RequestBody UrlRequestDto dto){
         String shortUrl = urlService.encurtarUrl(dto.url());
-        String urlResponse = "http://localhost:8080/" + shortUrl;
+        String urlResponse = url + shortUrl;
         UrlResponseDto dtoResponse = new UrlResponseDto(urlResponse);
         return ResponseEntity.status(HttpStatus.CREATED).body(dtoResponse);
     }

@@ -4,6 +4,7 @@ import com.guilherme.encurtador_url.url.exception.UrlConteudoException;
 import com.guilherme.encurtador_url.url.exception.UrlFormatException;
 import com.guilherme.encurtador_url.url.exception.UrlNãoExistenteException;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
@@ -51,18 +52,66 @@ public class UrlService {
         if (!urldb.isPresent()){
 
             UrlEntity urlCriada = new UrlEntity(url);
-            urlRepository.save(urlCriada);
-            Long id = urlCriada.getId();
-            String shortUrl = urlMath.encode(id);
-            urlCriada.setShortUrl(shortUrl);
 
-            return shortUrl;
+            //prevenção de Race Condition por duas Threads simultâneas alterando o valor no banco de dados.
+            //Garantindo Idempotência das requisições
+
+            try{
+
+                //flush força o erro a aparecer instantaneamente
+
+                urlRepository.saveAndFlush(urlCriada);
+
+                Long id = urlCriada.getId();
+                String shortUrl = urlMath.encode(id);
+                urlCriada.setShortUrl(shortUrl);
+
+                //esse save é apenas para deixar explicito o salvamento, pois, o @Transactional já garante que ao alterar
+                //o objeto, o Hibernate faça o Dirty Checking e veja que deve enviar um UPDATE para o banco
+                //
+
+                urlRepository.save(urlCriada);
+
+                return shortUrl;
+            }catch (DataIntegrityViolationException exception){
+
+                //fazemos a busca novamente para pegar o elemento inserido pela primeira thread
+
+                Optional<UrlEntity> urldbAux = urlRepository.findByOriginalUrl(url);
+                String shortUrl = urldbAux.get().getShortUrl();
+                return shortUrl;
+            }
+
         }else{
-            String shortUrl = urldb.get().getShortUrl();
 
+            String shortUrl = urldb.get().getShortUrl();
             return shortUrl;
         }
     }
+
+//    @Transactional
+//    public String encurtarUrl(String url) {
+//
+//        verificaConteudoUrl(url);
+//        verificaSeUrl(url);
+//
+//        Optional<UrlEntity> urldb = urlRepository.findByOriginalUrl(url);
+//
+//        if (!urldb.isPresent()){
+//
+//            UrlEntity urlCriada = new UrlEntity(url);
+//            urlRepository.save(urlCriada);
+//            Long id = urlCriada.getId();
+//            String shortUrl = urlMath.encode(id);
+//            urlCriada.setShortUrl(shortUrl);
+//            return shortUrl;
+//
+//        }else{
+//
+//            String shortUrl = urldb.get().getShortUrl();
+//            return shortUrl;
+//        }
+//    }
 
     @Transactional
     public String retornaOriginal(String url){
