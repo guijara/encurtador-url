@@ -14,13 +14,9 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("API Encurtador de URL")
-                        .version("1.0")
-                        .description("API de alta performance para encurtamento de URLs com analytics.")
-                        .termsOfService("http://swagger.io/terms/")
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org"))
-                        .contact(new Contact()
-                                .name("Guilherme Jara")
-                                .email("guilhermerjara@hotmail.com")));
+                        .title("API Encurtador de URLs")
+                        .description("API robusta para encurtamento de links com arquitetura escalável.")
+                        .contact(new Contact().name("Guilherme Jara").email("guilhermerjara@hotmail.com"))
+                        .version("1.0.0"));
     }
 }
