@@ -20,7 +20,7 @@ public class OpenApiConfig {
                         .termsOfService("http://swagger.io/terms/")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org"))
                         .contact(new Contact()
-                                .name("Teu Nome")
-                                .email("teuemail@dominio.com")));
+                                .name("Guilherme Jara")
+                                .email("guilhermerjara@hotmail.com")));
     }
 }
