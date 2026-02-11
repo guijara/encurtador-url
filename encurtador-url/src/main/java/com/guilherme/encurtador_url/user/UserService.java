@@ -2,6 +2,8 @@ package com.guilherme.encurtador_url.user;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -11,5 +13,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    private
+    private (String username){
+        Optional<UserEntity> user = userRepository.findByUsername(username);
+
+        if (user.isPresent()){
+
+        }
+    }
 }
