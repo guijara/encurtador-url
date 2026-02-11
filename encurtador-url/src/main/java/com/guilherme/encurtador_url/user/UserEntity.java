@@ -2,23 +2,27 @@ package com.guilherme.encurtador_url.user;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
 public class UserEntity {
 
     public UserEntity(){};
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID id;
+    private UUID id;
 
     @Column(unique = true)
-    String username;
+    private String username;
 
-    String password;
+    private String password;
 
-    String role;
+    private String role;
 }
