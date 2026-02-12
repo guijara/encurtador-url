@@ -12,12 +12,6 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserEntity {
 
-//    public UserEntity(String username, String password, Role role){
-//        this.username = username;
-//        this.password = password;
-//        this.role = role;
-//    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

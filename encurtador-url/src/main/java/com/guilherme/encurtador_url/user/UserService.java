@@ -32,7 +32,7 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public void cadastraUsuario(CreateUserDto dto) {
+    public void cadastrarUsuario(CreateUserDto dto) {
 
         Optional<UserEntity> user = userRepository.findByUsername(dto.username());
 
