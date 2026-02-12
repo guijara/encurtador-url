@@ -28,7 +28,8 @@ public class UserService implements UserDetailsService {
                         UsernameNotFoundException("Usuário não encontrado no sistema."));
 
         return User.builder().username(userEntity.getUsername())
-                .password(userEntity.getPassword()).roles(userEntity.getRole()).build();
+                .password(userEntity.getPassword()).
+                roles(userEntity.getRole().name()).build();
     }
 
 
