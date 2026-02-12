@@ -3,6 +3,7 @@ package com.guilherme.encurtador_url.user;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.UUID;
@@ -11,9 +12,8 @@ import java.util.UUID;
 @Table(name = "users")
 @Getter
 @Setter
+@NoArgsConstructor
 public class UserEntity {
-
-    public UserEntity(){};
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
