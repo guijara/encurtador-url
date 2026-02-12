@@ -1,10 +1,7 @@
 package com.guilherme.encurtador_url.user;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -15,6 +12,12 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserEntity {
 
+//    public UserEntity(String username, String password, Role role){
+//        this.username = username;
+//        this.password = password;
+//        this.role = role;
+//    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -24,5 +27,6 @@ public class UserEntity {
 
     private String password;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

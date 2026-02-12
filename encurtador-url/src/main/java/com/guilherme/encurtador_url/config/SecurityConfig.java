@@ -20,6 +20,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers(HttpMethod.GET, "/{shortUrl}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .anyRequest().authenticated()
                 );
 
