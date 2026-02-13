@@ -1,11 +1,23 @@
 package com.guilherme.encurtador_url.config;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.guilherme.encurtador_url.user.UserEntity;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
+@Service
 public class TokenConfig {
 
     @Value("${api.security.token.secret}")
     private String secret;
 
-    // 1. GERAR TOKEN (Login)
     public String generateToken(UserEntity user){
         try{
             // Algoritmo de Criptografia HMAC256
@@ -23,7 +35,6 @@ public class TokenConfig {
         }
     }
 
-    // 2. VALIDAR TOKEN (Filtro de Segurança)
     public String validateToken(String token){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
