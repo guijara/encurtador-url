@@ -54,7 +54,7 @@ public class UserController {
     @Operation(summary = "Logar usuário", description = "Recebe usuário e senha para realizar a autenticação do login")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Login realizado com sucesso e token recebido."),
-            @ApiResponse(responseCode = ""),
+            @ApiResponse(responseCode = "400", description = "O usuário enviado não existe no sistema."),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     @PostMapping("/login")
