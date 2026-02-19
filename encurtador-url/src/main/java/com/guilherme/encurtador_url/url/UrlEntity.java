@@ -1,5 +1,6 @@
 package com.guilherme.encurtador_url.url;
 
+import com.guilherme.encurtador_url.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -34,4 +35,8 @@ public class UrlEntity {
 
     @Column(name = "creation_date")
     private LocalDateTime creationAt;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 }
