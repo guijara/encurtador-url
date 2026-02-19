@@ -46,7 +46,11 @@ public class UserService implements UserDetailsService {
 
     public LoginResponseDto verificaUsuarioParaLogin(AutenticationDto dto){
 
+        // objeto autenticável
         var usernamePassword = new UsernamePasswordAuthenticationToken(dto.username(),dto.password());
+
+        // puxa o LoadByUsername, verifica se o usuario existe no banco, decripta a senha
+        // e compara pra ver se elas são iguais
         var auth = authenticationManager.authenticate(usernamePassword);
 
         var user = userRepository.findByUsername(dto.username()).orElseThrow(() -> new UsernameNotFoundException("Usuario não existe no sistema"));

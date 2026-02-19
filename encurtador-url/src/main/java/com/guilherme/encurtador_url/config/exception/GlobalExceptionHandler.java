@@ -7,8 +7,10 @@ import com.guilherme.encurtador_url.user.exception.UserExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.support.MetaDataAccessException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -48,10 +50,18 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<ApiError> UsuarioNãoEncontradoNoSistemaException(UsernameNotFoundException exception){
+    public ResponseEntity<ApiError> UsuarioNaoEncontradoNoSistemaException(UsernameNotFoundException exception){
         ApiError apiError = new ApiError(exception.getMessage(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiError> UsuarioNaoAutenticadoException(AuthenticationException exception){
+        ApiError apiError = new ApiError("Usuário ou senha inválidos",LocalDateTime.now());
+        return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(apiError);
+    }
+
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> GenericExceptionHandle(Exception exception){
