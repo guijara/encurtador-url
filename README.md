@@ -12,13 +12,13 @@ Uma API robusta e escalável para encurtamento de URLs, desenvolvida com Java, S
 * **Flyway** - Para migração e versionamento do banco de dados.
 * **Swagger (OpenAPI)** - Documentação interativa da API.
 
-## ⚙️ Pré-requisitos
+## Pré-requisitos
 
 Para rodar este projeto, precisas apenas ter instalado:
 * [Docker](https://www.docker.com/) e Docker Compose.
 * (Opcional) Java 21 e Maven se quiseres rodar fora do Docker.
 
-## 🛠️ Como Rodar (Passo a Passo)
+## Como Rodar (Passo a Passo)
 
 A forma mais simples é utilizando o Docker, que configura automaticamente o Banco de Dados e a Aplicação.
 
