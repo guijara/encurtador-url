@@ -18,16 +18,18 @@ public class TokenConfig {
     @Value("${api.security.token.secret}")
     private String secret;
 
+
+    // Gera o token
     public String generateToken(UserEntity user){
         try{
-            // Algoritmo de Criptografia HMAC256
+            // Algoritmo de Criptografia
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
             String token = JWT.create()
-                    .withIssuer("encurtador-url-api") // Quem emitiu (Nome da sua API)
-                    .withSubject(user.getUsername())  // Quem é o dono do token (ID ou Username)
+                    .withIssuer("encurtador-url-api") // Quem emitiu
+                    .withSubject(user.getUsername())  // Quem é o dono do token
                     .withExpiresAt(genExpirationDate()) // Validade
-                    .sign(algorithm); // Assina digitalmente
+                    .sign(algorithm); // Assinatura digital
 
             return token;
         } catch (JWTCreationException exception) {
@@ -35,6 +37,8 @@ public class TokenConfig {
         }
     }
 
+
+    // Valida tokens para requisições
     public String validateToken(String token){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);

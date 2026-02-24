@@ -3,6 +3,7 @@ package com.guilherme.encurtador_url.url;
 import com.guilherme.encurtador_url.url.exception.UrlConteudoException;
 import com.guilherme.encurtador_url.url.exception.UrlFormatException;
 import com.guilherme.encurtador_url.url.exception.UrlNãoExistenteException;
+import com.guilherme.encurtador_url.user.UserEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -42,7 +44,7 @@ public class UrlService {
     }
 
     @Transactional
-    public String encurtarUrl(String url) {
+    public String encurtarUrl(String url, UserEntity userLogado) {
 
         verificaConteudoUrl(url);
         verificaSeUrl(url);
@@ -52,6 +54,7 @@ public class UrlService {
         if (!urldb.isPresent()){
 
             UrlEntity urlCriada = new UrlEntity(url);
+            urlCriada.setUser(userLogado);
 
             //prevenção de Race Condition por duas Threads simultâneas alterando o valor no banco de dados.
             //Garantindo Idempotência das requisições
@@ -65,6 +68,7 @@ public class UrlService {
                 Long id = urlCriada.getId();
                 String shortUrl = urlMath.encode(id);
                 urlCriada.setShortUrl(shortUrl);
+                urlCriada.setCreationAt(LocalDateTime.now());
 
                 //esse save é apenas para deixar explicito o salvamento, pois, o @Transactional já garante que ao alterar
                 //o objeto, o Hibernate faça o Dirty Checking e veja que deve enviar um UPDATE para o banco
