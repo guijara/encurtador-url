@@ -1,6 +1,5 @@
 package com.guilherme.encurtador_url.user;
 
-import com.guilherme.encurtador_url.config.TokenConfig;
 import com.guilherme.encurtador_url.user.dto.AutenticationDto;
 import com.guilherme.encurtador_url.user.dto.CreateUserDto;
 import com.guilherme.encurtador_url.user.dto.LoginResponseDto;
@@ -11,10 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.token.TokenService;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

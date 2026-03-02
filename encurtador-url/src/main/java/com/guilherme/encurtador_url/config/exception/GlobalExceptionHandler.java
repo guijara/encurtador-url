@@ -61,8 +61,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(apiError);
     }
 
-
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> GenericExceptionHandle(Exception exception){
 

@@ -1,4 +1,4 @@
-package com.guilherme.encurtador_url.config;
+package com.guilherme.encurtador_url.config.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

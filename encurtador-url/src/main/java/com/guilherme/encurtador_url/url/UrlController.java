@@ -55,4 +55,15 @@ public class UrlController {
         UrlResponseDto dtoResponse = new UrlResponseDto(urlResponse);
         return ResponseEntity.status(HttpStatus.CREATED).body(dtoResponse);
     }
+
+    @Operation(summary = "Deletar URL", description = "Recebe um ID de URL e deleta do banco de dados")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "")
+    })
+    @DeleteMapping("/api/urls/{id}")
+    public ResponseEntity<Void> deleteUrl(@PathVariable Long id, @AuthenticationPrincipal UserEntity userLogado){
+        urlService.deletarUrl(id,userLogado);
+        return ResponseEntity...
+    }
+
 }

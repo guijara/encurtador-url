@@ -3,6 +3,7 @@ package com.guilherme.encurtador_url.url;
 import com.guilherme.encurtador_url.url.exception.UrlConteudoException;
 import com.guilherme.encurtador_url.url.exception.UrlFormatException;
 import com.guilherme.encurtador_url.url.exception.UrlNãoExistenteException;
+import com.guilherme.encurtador_url.url.exception.UserNotAllowedException;
 import com.guilherme.encurtador_url.user.UserEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -123,10 +124,27 @@ public class UrlService {
         Long id = urlMath.decode(url);
 
 
-        UrlEntity urlOriginal = urlRepository.findById(id).orElseThrow(() -> new UrlNãoExistenteException("A url original não existe no banco de dados."));
+        UrlEntity urlOriginal = urlRepository.findById(id).orElseThrow(() ->
+                new UrlNãoExistenteException("A URL original não existe no banco de dados."));
 
         urlOriginal.setNumClicks(urlOriginal.getNumClicks()+1);
 
         return urlOriginal.getOriginalUrl();
+    }
+
+    @Transactional
+    public void deletarUrl(Long id, UserEntity userLogado) {
+
+        //valida url no banco
+        UrlEntity url = urlRepository.findById(id).orElseThrow(() ->
+                new UrlNãoExistenteException("A URL não existe no sistema"));
+
+        //valida usuário
+        if (!userLogado.equals(url.getUser())){
+            throw new UserNotAllowedException("Você não tem permissão para deletar essa URL");
+        }
+
+        //deleta do banco
+        urlRepository.delete(url);
     }
 }

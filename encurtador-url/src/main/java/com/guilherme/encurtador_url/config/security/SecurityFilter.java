@@ -1,4 +1,4 @@
-package com.guilherme.encurtador_url.config;
+package com.guilherme.encurtador_url.config.security;
 
 import com.guilherme.encurtador_url.user.UserRepository;
 import jakarta.servlet.FilterChain;

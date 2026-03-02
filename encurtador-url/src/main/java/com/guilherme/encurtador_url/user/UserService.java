@@ -1,6 +1,6 @@
 package com.guilherme.encurtador_url.user;
 
-import com.guilherme.encurtador_url.config.TokenConfig;
+import com.guilherme.encurtador_url.config.security.TokenConfig;
 import com.guilherme.encurtador_url.user.dto.AutenticationDto;
 import com.guilherme.encurtador_url.user.dto.CreateUserDto;
 import com.guilherme.encurtador_url.user.dto.LoginResponseDto;
