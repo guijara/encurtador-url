@@ -3,6 +3,7 @@ package com.guilherme.encurtador_url.config.exception;
 import com.guilherme.encurtador_url.url.exception.UrlConteudoException;
 import com.guilherme.encurtador_url.url.exception.UrlFormatException;
 import com.guilherme.encurtador_url.url.exception.UrlNãoExistenteException;
+import com.guilherme.encurtador_url.url.exception.UserNotAllowedException;
 import com.guilherme.encurtador_url.user.exception.UserExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> UsuarioNaoAutenticadoException(AuthenticationException exception){
         ApiError apiError = new ApiError("Usuário ou senha inválidos",LocalDateTime.now());
         return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(apiError);
+    }
+
+    @ExceptionHandler(UserNotAllowedException.class)
+    public ResponseEntity<ApiError> UsuárioSemPermissãoException(UserNotAllowedException exception){
+        ApiError apiError = new ApiError(exception.getMessage(),LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiError);
     }
 
     @ExceptionHandler(Exception.class)
