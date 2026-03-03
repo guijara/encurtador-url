@@ -154,8 +154,7 @@ public class UrlService {
     public List<UrlResponseCompleteDto> retornaUrlsPorUsuario(UserEntity user){
 
         //busca urls no banco baseado em um usuário
-        List<UrlEntity> urls = urlRepository.findByUser(user).orElseThrow(() ->
-                new UrlNãoExistenteException("Nenhuma URL foi encontrada para esse usuário"));
+        List<UrlEntity> urls = urlRepository.findByUser(user);
 
         //converte url entidade em dto
         return urls.stream().map(urlEntity ->
