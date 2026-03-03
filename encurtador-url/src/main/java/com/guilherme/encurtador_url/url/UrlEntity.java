@@ -36,6 +36,9 @@ public class UrlEntity {
     @Column(name = "creation_date")
     private LocalDateTime creationAt;
 
+    @Column(name = "expired_at")
+    private LocalDateTime expiredAt;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;

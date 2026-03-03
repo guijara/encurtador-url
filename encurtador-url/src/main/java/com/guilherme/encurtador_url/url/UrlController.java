@@ -42,7 +42,9 @@ public class UrlController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor.")
     })
     @GetMapping("/{shortUrl}")
-    public ResponseEntity<Void> getUrl(@PathVariable String shortUrl){
+    public ResponseEntity<Void> getUrl(
+            @Parameter(description = "URL encurtada",example = "Q0u")
+            @PathVariable String shortUrl){
         String urlOriginal = urlService.retornaOriginal(shortUrl);
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(urlOriginal)).build();
     }
