@@ -1,5 +1,7 @@
 package com.guilherme.encurtador_url.url;
 
+import com.guilherme.encurtador_url.url.dto.UrlResponseCompleteDto;
+import com.guilherme.encurtador_url.url.dto.UrlResponseDto;
 import com.guilherme.encurtador_url.url.exception.UrlConteudoException;
 import com.guilherme.encurtador_url.url.exception.UrlFormatException;
 import com.guilherme.encurtador_url.url.exception.UrlNãoExistenteException;
@@ -13,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -146,5 +149,19 @@ public class UrlService {
 
         //deleta do banco
         urlRepository.delete(url);
+    }
+
+    public List<UrlResponseCompleteDto> retornaUrlsPorUsuario(UserEntity user){
+
+        //busca urls no banco baseado em um usuário
+        List<UrlEntity> urls = urlRepository.findByUser(user).orElseThrow(() ->
+                new UrlNãoExistenteException("Nenhuma URL foi encontrada para esse usuário"));
+
+        //converte url entidade em dto
+        return urls.stream().map(urlEntity ->
+                new UrlResponseCompleteDto(urlEntity.getOriginalUrl(),
+                        urlEntity.getShortUrl(),urlEntity.getNumClicks(),
+                        urlEntity.getCreationAt())).toList();
+
     }
 }

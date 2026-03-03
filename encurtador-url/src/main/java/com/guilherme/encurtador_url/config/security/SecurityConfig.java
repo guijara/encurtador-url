@@ -24,8 +24,10 @@ public class SecurityConfig {
     private SecurityFilter securityFilter;
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
-    public SecurityConfig(SecurityFilter securityFilter,){
+    public SecurityConfig(SecurityFilter securityFilter,
+                          CustomAuthenticationEntryPoint customAuthenticationEntryPoint){
         this.securityFilter = securityFilter;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     }
 
     // Gerencia as permissões dos endpoints da aplicação

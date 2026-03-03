@@ -58,12 +58,26 @@ public class UrlController {
 
     @Operation(summary = "Deletar URL", description = "Recebe um ID de URL e deleta do banco de dados")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "")
+            @ApiResponse(responseCode = "403", description = "O usuário que tentou realizar essa atividade não possui permissão"),
+            @ApiResponse(responseCode = "204", description = "Url foi deletada com sucesso"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor.")
     })
     @DeleteMapping("/api/urls/{id}")
     public ResponseEntity<Void> deleteUrl(@PathVariable Long id, @AuthenticationPrincipal UserEntity userLogado){
         urlService.deletarUrl(id,userLogado);
-        return ResponseEntity...
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @Operation(summary = "Listar URLs", description = "Recebe um usuário e lista todas as URLs pertencentes a ele")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "403", description = "O usuário que tentou realizar essa atividade não possui permissão"),
+            @ApiResponse(responseCode = "204", description = "Url foi deletada com sucesso"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor.")
+    })
+    @GetMapping("/api/urls")
+    public ResponseEntity<Void> showUrls(@AuthenticationPrincipal UserEntity userLogado){
+        urlService.retornaUrlsPorUsuario(userLogado);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
