@@ -2,6 +2,8 @@ package com.guilherme.encurtador_url.url;
 
 import com.guilherme.encurtador_url.user.UserEntity;
 import org.springframework.data.domain.Limit;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +16,5 @@ public interface UrlRepository extends JpaRepository<UrlEntity,Long> {
 
     Optional<UrlEntity> findByOriginalUrl(String originalUrl);
 
-    List<UrlEntity> findByUser(UserEntity user);
+    Page<UrlEntity> findByUser(UserEntity user, Pageable pageable);
 }

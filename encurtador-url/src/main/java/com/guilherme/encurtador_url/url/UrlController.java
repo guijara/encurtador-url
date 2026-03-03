@@ -5,13 +5,17 @@ import com.guilherme.encurtador_url.url.dto.UrlResponseCompleteDto;
 import com.guilherme.encurtador_url.url.dto.UrlResponseDto;
 import com.guilherme.encurtador_url.user.UserEntity;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -66,21 +70,27 @@ public class UrlController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor.")
     })
     @DeleteMapping("/api/urls/{id}")
-    public ResponseEntity<Void> deleteUrl(@PathVariable Long id, @AuthenticationPrincipal UserEntity userLogado){
+    public ResponseEntity<Void> deleteUrl(
+            @Parameter(description = "ID da URL que vai ser deletada", example = "200")
+            @PathVariable Long id, @AuthenticationPrincipal UserEntity userLogado){
         urlService.deletarUrl(id,userLogado);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Operation(summary = "Listar URLs", description = "Recebe um usuário e lista todas as URLs pertencentes a ele")
     @ApiResponses(value = {
-//            @ApiResponse(responseCode = "404", description = "O usuário informado não possui URLs registradas"),
-            @ApiResponse(responseCode = "200", description = "Retorna a lista de URLs do usuário"),
+            @ApiResponse(responseCode = "200", description = "Retorna a página da lista de URLs do usuário"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor.")
     })
     @GetMapping("/api/urls")
-    public ResponseEntity<List<UrlResponseCompleteDto>> showUrls(@AuthenticationPrincipal UserEntity userLogado){
-        List<UrlResponseCompleteDto> urls = urlService.retornaUrlsPorUsuario(userLogado);
-        return ResponseEntity.ok(urls);
+    public ResponseEntity<Page<UrlResponseCompleteDto>> showUrls(
+            @AuthenticationPrincipal UserEntity user,
+            @Parameter(description = "Configurações de paginação",
+            example = "{\"page\": 0, \"size\": 10}")
+            @PageableDefault(sort = "creationAt", direction = Sort.Direction.DESC,
+            size = 10) Pageable pageable){
+        Page<UrlResponseCompleteDto> page = urlService.retornaUrlsPorUsuario(user,pageable);
+        return ResponseEntity.ok(page);
     }
 
 }
