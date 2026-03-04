@@ -6,7 +6,6 @@ import com.guilherme.encurtador_url.url.dto.UrlResponseDto;
 import com.guilherme.encurtador_url.user.UserEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,7 +20,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @Tag(name = "URL",description = "Criação e Visualização das URLs")
@@ -54,12 +52,13 @@ public class UrlController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "O processo deu certo e a URL encurtada foi criada com sucesso."),
             @ApiResponse(responseCode = "400", description = "O processo deu erro por input inválido da URL original."),
+            @ApiResponse(responseCode = "410", description = "O processo deu erro porquê a URL está expirada"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor.")
     })
     @PostMapping("/api/urls")
     public ResponseEntity<UrlResponseDto> postUrl(@RequestBody UrlRequestDto dto,
                                           @AuthenticationPrincipal UserEntity userLogado){
-        String shortUrl = urlService.encurtarUrl(dto.url(),userLogado);
+        String shortUrl = urlService.encurtarUrl(dto.url(),dto.expirationType(),userLogado);
         String urlResponse = url + shortUrl;
         UrlResponseDto dtoResponse = new UrlResponseDto(urlResponse);
         return ResponseEntity.status(HttpStatus.CREATED).body(dtoResponse);

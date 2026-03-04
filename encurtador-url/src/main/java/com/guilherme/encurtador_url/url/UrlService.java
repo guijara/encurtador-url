@@ -1,21 +1,22 @@
 package com.guilherme.encurtador_url.url;
 
 import com.guilherme.encurtador_url.url.dto.UrlResponseCompleteDto;
-import com.guilherme.encurtador_url.url.exception.UrlConteudoException;
-import com.guilherme.encurtador_url.url.exception.UrlFormatException;
-import com.guilherme.encurtador_url.url.exception.UrlNãoExistenteException;
-import com.guilherme.encurtador_url.url.exception.UserNotAllowedException;
+import com.guilherme.encurtador_url.url.exception.*;
 import com.guilherme.encurtador_url.user.UserEntity;
 import jakarta.transaction.Transactional;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
 @Service
@@ -43,12 +44,12 @@ public class UrlService {
 
     private void verificaConteudoUrl(String url){
         if(url == null || url.isBlank()){
-            throw new UrlConteudoException("A url informada não deve ser vazia.");
+            throw new UrlContentException("A url informada não deve ser vazia.");
         }
     }
 
     @Transactional
-    public String encurtarUrl(String url, UserEntity userLogado) {
+    public String encurtarUrl(String url, ExpirationType expirationType,UserEntity userLogado) {
 
         verificaConteudoUrl(url);
         verificaSeUrl(url);
@@ -59,6 +60,14 @@ public class UrlService {
 
             UrlEntity urlCriada = new UrlEntity(url);
             urlCriada.setUser(userLogado);
+
+            if (expirationType.equals(ExpirationType.SEVEN_DAYS)){
+                urlCriada.setExpiredAt(LocalDateTime.now().plusDays(7));
+            }else if (expirationType.equals(ExpirationType.THREE_MONTHS)){
+                urlCriada.setExpiredAt(LocalDateTime.now().plusMonths(3));
+            }else{
+                urlCriada.setExpiredAt(null);
+            }
 
             //prevenção de Race Condition por duas Threads simultâneas alterando o valor no banco de dados.
             //Garantindo Idempotência das requisições
@@ -73,7 +82,6 @@ public class UrlService {
                 String shortUrl = urlMath.encode(id);
                 urlCriada.setShortUrl(shortUrl);
                 urlCriada.setCreationAt(LocalDateTime.now());
-                urlCriada.setExpiredAt();
 
                 //esse save é apenas para deixar explicito o salvamento, pois, o @Transactional já garante que ao alterar
                 //o objeto, o Hibernate faça o Dirty Checking e veja que deve enviar um UPDATE para o banco
@@ -129,7 +137,12 @@ public class UrlService {
 
 
         UrlEntity urlOriginal = urlRepository.findById(id).orElseThrow(() ->
-                new UrlNãoExistenteException("A URL original não existe no banco de dados."));
+                new UrlNonExistentException("A URL original não existe no banco de dados."));
+
+        if (urlOriginal.getExpiredAt() != null && urlOriginal.getExpiredAt()
+                .isBefore(LocalDateTime.now())){
+            throw new UrlExpiredTimeException("A URL teve o tempo expirado.");
+        }
 
         urlOriginal.setNumClicks(urlOriginal.getNumClicks()+1);
 
@@ -141,7 +154,7 @@ public class UrlService {
 
         //valida url no banco
         UrlEntity url = urlRepository.findById(id).orElseThrow(() ->
-                new UrlNãoExistenteException("A URL não existe no sistema"));
+                new UrlNonExistentException("A URL não existe no sistema"));
 
         //valida usuário
         if (!userLogado.equals(url.getUser())){
@@ -155,7 +168,9 @@ public class UrlService {
     public Page<UrlResponseCompleteDto> retornaUrlsPorUsuario(UserEntity user , Pageable pageable){
 
         //busca urls no banco baseado em um usuário
-        Page<UrlEntity> page = urlRepository.findByUser(user,pageable);
+        Page<UrlEntity> page = urlRepository.findByUser(user,LocalDateTime.now(),pageable);
+
+
 
         //converte as url entidades para dto
         return page.map(url -> new UrlResponseCompleteDto(
@@ -164,5 +179,13 @@ public class UrlService {
                 url.getNumClicks(),
                 url.getCreationAt()
         ));
+    }
+
+//    @Scheduled(fixedRate = 60000)
+    @Scheduled(cron = "0 0 0 * * *")
+    @Transactional
+    public void deleteExpiredUrls(){
+        urlRepository.deleteByExpiredAtBefore(LocalDateTime.now());
+        System.out.println("Cleanup was a success: expired URLs were deleted");
     }
 }
