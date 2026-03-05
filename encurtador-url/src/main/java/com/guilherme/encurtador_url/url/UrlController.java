@@ -43,7 +43,7 @@ public class UrlController {
     public ResponseEntity<Void> getUrl(
             @Parameter(description = "URL encurtada",example = "Q0u")
             @PathVariable String shortUrl){
-        String urlOriginal = urlService.retornaOriginal(shortUrl);
+        String urlOriginal = urlService.recuperaUrlOriginal(shortUrl);
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(urlOriginal)).build();
     }
 

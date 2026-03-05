@@ -4,7 +4,6 @@ import com.guilherme.encurtador_url.url.dto.UrlResponseCompleteDto;
 import com.guilherme.encurtador_url.url.exception.*;
 import com.guilherme.encurtador_url.user.UserEntity;
 import jakarta.transaction.Transactional;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +14,6 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
 @Service
@@ -131,7 +128,7 @@ public class UrlService {
 //    }
 
     @Transactional
-    public String retornaOriginal(String url){
+    public String recuperaUrlOriginal(String url){
 
         Long id = urlMath.decode(url);
 
@@ -141,6 +138,7 @@ public class UrlService {
 
         if (urlOriginal.getExpiredAt() != null && urlOriginal.getExpiredAt()
                 .isBefore(LocalDateTime.now())){
+            urlRepository.delete(urlOriginal);
             throw new UrlExpiredTimeException("A URL teve o tempo expirado.");
         }
 
@@ -181,8 +179,10 @@ public class UrlService {
         ));
     }
 
-//    @Scheduled(fixedRate = 60000)
-    @Scheduled(cron = "0 0 0 * * *")
+
+    //Verifica o tempo de expiração no banco baseado no cron e apaga
+    @Scheduled(fixedRate = 60000)
+//    @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     public void deleteExpiredUrls(){
         urlRepository.deleteByExpiredAtBefore(LocalDateTime.now());
