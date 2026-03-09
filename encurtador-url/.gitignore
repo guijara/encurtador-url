@@ -1,33 +1,59 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# --- Sistema e Geral ---
+.DS_Store
+Thumbs.db
+*.pem
+*.log
+.env
+.env.local
+.env.*.local
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
+# --- IDEs (IntelliJ, VS Code, STS, NetBeans) ---
+.idea/
 *.iws
 *.iml
 *.ipr
-
-### NetBeans ###
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+.apt_generated/
+.springBeans
+.sts4-cache/
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+bin/
 
-### VS Code ###
-.vscode/
+# --- Backend (Spring Boot / Maven) ---
+/backend/target/
+/backend/mvnw
+/backend/mvnw.cmd
+/backend/.mvn/
+/backend/HELP.md
+/backend/.env
+
+# --- Frontend (Next.js / Node / Yarn) ---
+/frontend/node_modules/
+/frontend/.next/
+/frontend/out/
+/frontend/build/
+/frontend/.vercel/
+/frontend/coverage/
+/frontend/.pnp
+/frontend/.pnp.*
+/frontend/.yarn/*
+!/frontend/.yarn/patches
+!/frontend/.yarn/plugins
+!/frontend/.yarn/releases
+!/frontend/.yarn/versions
+/frontend/*.tsbuildinfo
+/frontend/next-env.d.ts
+/frontend/.env*
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+/frontend/.pnpm-debug.log*
