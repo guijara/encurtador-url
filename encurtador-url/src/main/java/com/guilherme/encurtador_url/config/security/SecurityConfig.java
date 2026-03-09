@@ -23,11 +23,14 @@ public class SecurityConfig {
 
     private SecurityFilter securityFilter;
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final RateLimitingFilter rateLimitingFilter;
 
     public SecurityConfig(SecurityFilter securityFilter,
-                          CustomAuthenticationEntryPoint customAuthenticationEntryPoint){
+                          CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
+                          RateLimitingFilter rateLimitingFilter){
         this.securityFilter = securityFilter;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.rateLimitingFilter = rateLimitingFilter;
     }
 
     // Gerencia as permissões dos endpoints da aplicação
@@ -43,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
                         .anyRequest().authenticated()
                 ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(rateLimitingFilter, SecurityFilter.class)
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(customAuthenticationEntryPoint))
                 .build();
     }

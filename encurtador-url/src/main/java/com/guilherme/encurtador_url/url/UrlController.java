@@ -1,11 +1,14 @@
 package com.guilherme.encurtador_url.url;
 
+import com.guilherme.encurtador_url.config.exception.ApiError;
 import com.guilherme.encurtador_url.url.dto.UrlRequestDto;
 import com.guilherme.encurtador_url.url.dto.UrlResponseCompleteDto;
 import com.guilherme.encurtador_url.url.dto.UrlResponseDto;
 import com.guilherme.encurtador_url.user.UserEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,9 +38,21 @@ public class UrlController {
 
     @Operation(summary = "Retorna URL original", description = "Recebe a URL encurtada e devolve a original longa")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "302", description = "O processo deu certo e o link foi redirecionado corretamente"),
-            @ApiResponse(responseCode = "404", description = "O processo deu erro por URL não encontrada no banco de dados."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor.")
+            @ApiResponse(
+                    responseCode = "302",
+                    description = "O processo deu certo e o link foi redirecionado corretamente",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "O processo deu erro por URL não encontrada no banco de dados.",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Erro interno do servidor.",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))
+            )
     })
     @GetMapping("/{shortUrl}")
     public ResponseEntity<Void> getUrl(
@@ -50,10 +65,26 @@ public class UrlController {
 
     @Operation(summary = "Encurtar URL", description = "Recebe a URL original longa e retorna uma URL encurtada")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "O processo deu certo e a URL encurtada foi criada com sucesso."),
-            @ApiResponse(responseCode = "400", description = "O processo deu erro por input inválido da URL original."),
-            @ApiResponse(responseCode = "410", description = "O processo deu erro porquê a URL está expirada"),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor.")
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "O processo deu certo e a URL encurtada foi criada com sucesso.",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "O processo deu erro por input inválido da URL original.",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))
+            ),
+            @ApiResponse(
+                    responseCode = "410",
+                    description = "O processo deu erro porquê a URL está expirada",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Erro interno do servidor.",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))
+            )
     })
     @PostMapping("/api/urls")
     public ResponseEntity<UrlResponseDto> postUrl(@RequestBody UrlRequestDto dto,
@@ -66,9 +97,21 @@ public class UrlController {
 
     @Operation(summary = "Deletar URL", description = "Recebe um ID de URL e deleta do banco de dados")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "403", description = "O usuário que tentou realizar essa atividade não possui permissão"),
-            @ApiResponse(responseCode = "204", description = "Url foi deletada com sucesso"),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor.")
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "O usuário que tentou realizar essa atividade não possui permissão",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))
+            ),
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Url foi deletada com sucesso",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Erro interno do servidor.",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))
+            )
     })
     @DeleteMapping("/api/urls/{id}")
     public ResponseEntity<Void> deleteUrl(
@@ -80,8 +123,16 @@ public class UrlController {
 
     @Operation(summary = "Listar URLs", description = "Recebe um usuário e lista todas as URLs pertencentes a ele")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Retorna a página da lista de URLs do usuário"),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor.")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Retorna a página da lista de URLs do usuário",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Erro interno do servidor.",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))
+            )
     })
     @GetMapping("/api/urls")
     public ResponseEntity<Page<UrlResponseCompleteDto>> showUrls(

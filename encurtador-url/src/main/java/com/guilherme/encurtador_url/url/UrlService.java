@@ -27,6 +27,7 @@ public class UrlService {
         this.urlMath = urlMath;
     }
 
+    //Valida a formatação da URL enviada pelo usuário
     private void verificaSeUrl(String url){
 
         try{
@@ -39,6 +40,7 @@ public class UrlService {
         }
     }
 
+    //Valida conteúdo da URL enviada pelo usuário
     private void verificaConteudoUrl(String url){
         if(url == null || url.isBlank()){
             throw new UrlContentException("A url informada não deve ser vazia.");
@@ -138,6 +140,7 @@ public class UrlService {
 
         if (urlOriginal.getExpiredAt() != null && urlOriginal.getExpiredAt()
                 .isBefore(LocalDateTime.now())){
+
             urlRepository.delete(urlOriginal);
             throw new UrlExpiredTimeException("A URL teve o tempo expirado.");
         }
@@ -166,7 +169,7 @@ public class UrlService {
     public Page<UrlResponseCompleteDto> retornaUrlsPorUsuario(UserEntity user , Pageable pageable){
 
         //busca urls no banco baseado em um usuário
-        Page<UrlEntity> page = urlRepository.findByUser(user,LocalDateTime.now(),pageable);
+        Page<UrlEntity> page = urlRepository.findActiveByUser(user,LocalDateTime.now(),pageable);
 
 
 
@@ -178,7 +181,6 @@ public class UrlService {
                 url.getCreationAt()
         ));
     }
-
 
     //Verifica o tempo de expiração no banco baseado no cron e apaga
     @Scheduled(fixedRate = 60000)

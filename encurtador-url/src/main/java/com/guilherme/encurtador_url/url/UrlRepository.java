@@ -23,7 +23,7 @@ public interface UrlRepository extends JpaRepository<UrlEntity,Long> {
 
     // Seleciona por usuario, todas as urls, dessas, apenas as não expiradas
     @Query("SELECT u FROM UrlEntity u WHERE u.user = :user AND (u.expiredAt IS NULL OR u.expiredAt > :now)")
-    Page<UrlEntity> findByUser(UserEntity user, LocalDateTime now, Pageable pageable);
+    Page<UrlEntity> findActiveByUser(UserEntity user, LocalDateTime now, Pageable pageable);
 
     @Modifying
     @Transactional
