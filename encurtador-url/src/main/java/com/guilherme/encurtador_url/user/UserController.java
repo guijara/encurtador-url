@@ -1,5 +1,6 @@
 package com.guilherme.encurtador_url.user;
 
+import com.guilherme.encurtador_url.config.openapi.ApiStandardErrors;
 import com.guilherme.encurtador_url.user.dto.AutenticationDto;
 import com.guilherme.encurtador_url.user.dto.CreateUserDto;
 import com.guilherme.encurtador_url.user.dto.LoginResponseDto;
@@ -28,15 +29,10 @@ public class UserController {
     }
 
 
-    @Operation(summary = "Registrar usuário", description = "Recebe username e " +
-            "password e criar um usuário no banco caso não exista")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description
-                    = "O processo deu certo e o usuário foi criado."),
-            @ApiResponse(responseCode = "400", description
-                    = "O processo deu erro pois o usuário já existe no sistema."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
-    })
+    @Operation(summary = "Registrar usuário", description = "Recebe username e " +"password e criar um usuário no banco caso não exista")
+    @ApiStandardErrors
+    @ApiResponse(responseCode = "201", description= "O processo deu certo e o usuário foi criado.")
+    @ApiResponse(responseCode = "400", description= "O processo deu erro pois o usuário já existe no sistema.")
     @PostMapping("/register")
     public ResponseEntity<Void> cadastrarUsuario(@Valid @RequestBody CreateUserDto dto){
 
@@ -47,10 +43,10 @@ public class UserController {
 
 
     @Operation(summary = "Logar usuário", description = "Recebe usuário e senha para realizar a autenticação do login")
+    @ApiStandardErrors
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Login realizado com sucesso e token recebido."),
             @ApiResponse(responseCode = "400", description = "O usuário enviado não existe no sistema."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> logarUsuario(@Valid @RequestBody AutenticationDto dto){

@@ -1,4 +1,4 @@
-package com.guilherme.encurtador_url.config;
+package com.guilherme.encurtador_url.config.openapi;
 
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.Components;
