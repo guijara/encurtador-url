@@ -35,6 +35,23 @@ public class SecurityConfig {
     }
 
     // Gerencia as permissões dos endpoints da aplicação
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        return http
+//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//                .csrf(csrf -> csrf.disable())
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/{shortUrl}").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
+//                        .anyRequest().authenticated()
+//                ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterAfter(rateLimitingFilter, SecurityFilter.class)
+//                .exceptionHandling(ex -> ex.authenticationEntryPoint(customAuthenticationEntryPoint))
+//                .build();
+//    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -46,8 +63,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
                         .anyRequest().authenticated()
-                ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(rateLimitingFilter, SecurityFilter.class)
+                )
+                // 1. Colocamos o Rate Limit bem no início, após o tratamento de CORS
+                .addFilterAfter(rateLimitingFilter, org.springframework.web.filter.CorsFilter.class)
+
+                // 2. Colocamos o seu filtro de JWT antes do filtro de login padrão
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(customAuthenticationEntryPoint))
                 .build();
     }
