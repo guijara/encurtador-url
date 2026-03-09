@@ -15,6 +15,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -64,21 +65,15 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
 
-        // 1. Quem pode acessar? (Coloque a URL do seu front-end aqui no futuro, ou "*" para liberar geral nos testes)
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://127.0.0.1:5500"));
-
-        // 2. Quais métodos HTTP eles podem usar?
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-
-        // 3. Quais cabeçalhos eles podem enviar? (Essencial liberar o "Authorization" por causa do JWT)
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-
-        // Aplica essa regra para todos os endpoints da API ("/**")
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-
         return source;
     }
+
 
 }
