@@ -9,13 +9,12 @@ export interface UrlResponseCompleteDto {
     id: number;
     originalUrl: string;
     shortUrl: string;
-    clicks: number;
-    expirationType: 'PERMANENT' | 'SEVEN_DAYS' | 'ONE_DAY';
+    numClicks: number;
+    expirationType: 'PERMANENT' | 'SEVEN_DAYS' | 'THREE_MONTHS';
     creationAt: string;
     expiredAt: string | null;
 }
 
-// Alias para compatibilidade com código existente
 export type UrlDto = UrlResponseCompleteDto;
 
 export interface LoginResponseDto {

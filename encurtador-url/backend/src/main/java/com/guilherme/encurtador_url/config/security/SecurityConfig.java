@@ -34,24 +34,6 @@ public class SecurityConfig {
         this.rateLimitingFilter = rateLimitingFilter;
     }
 
-    // Gerencia as permissões dos endpoints da aplicação
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        return http
-//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//                .csrf(csrf -> csrf.disable())
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-//                        .requestMatchers(HttpMethod.GET, "/{shortUrl}").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
-//                        .anyRequest().authenticated()
-//                ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-//                .addFilterAfter(rateLimitingFilter, SecurityFilter.class)
-//                .exceptionHandling(ex -> ex.authenticationEntryPoint(customAuthenticationEntryPoint))
-//                .build();
-//    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http

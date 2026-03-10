@@ -63,7 +63,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
     private Bucket createNewBucket() {
         // Define o limite de 5 requisições por minuto
         return Bucket.builder()
-                .addLimit(limit -> limit.capacity(5).refillGreedy(5, Duration.ofMinutes(1)))
+                .addLimit(limit -> limit.capacity(100).refillGreedy(100, Duration.ofMinutes(1)))
                 .build();
     }
 

@@ -62,10 +62,13 @@ public class UrlService {
 
             if (expirationType.equals(ExpirationType.SEVEN_DAYS)){
                 urlCriada.setExpiredAt(LocalDateTime.now().plusDays(7));
+                urlCriada.setExpirationType(ExpirationType.SEVEN_DAYS);
             }else if (expirationType.equals(ExpirationType.THREE_MONTHS)){
                 urlCriada.setExpiredAt(LocalDateTime.now().plusMonths(3));
+                urlCriada.setExpirationType(ExpirationType.THREE_MONTHS);
             }else{
                 urlCriada.setExpiredAt(null);
+                urlCriada.setExpirationType(ExpirationType.PERMANENT);
             }
 
             //prevenção de Race Condition por duas Threads simultâneas alterando o valor no banco de dados.
@@ -157,10 +160,12 @@ public class UrlService {
         UrlEntity url = urlRepository.findById(id).orElseThrow(() ->
                 new UrlNonExistentException("A URL não existe no sistema"));
 
-        //valida usuário
-        if (!userLogado.equals(url.getUser())){
+
+        // Valida o usuário
+        if (!url.getUser().getId().equals(userLogado.getId())) {
             throw new UserNotAllowedException("Você não tem permissão para deletar essa URL");
         }
+
 
         //deleta do banco
         urlRepository.delete(url);
@@ -175,9 +180,12 @@ public class UrlService {
 
         //converte as url entidades para dto
         return page.map(url -> new UrlResponseCompleteDto(
+                url.getId(),
                 url.getOriginalUrl(),
                 url.getShortUrl(),
                 url.getNumClicks(),
+                url.getExpirationType(),
+                url.getExpiredAt(),
                 url.getCreationAt()
         ));
     }

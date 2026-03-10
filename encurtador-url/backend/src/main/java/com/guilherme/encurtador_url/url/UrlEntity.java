@@ -36,6 +36,10 @@ public class UrlEntity {
     @Column(name = "creation_date")
     private LocalDateTime creationAt;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "expiration_type")
+    private ExpirationType expirationType;
+
     @Column(name = "expired_at")
     private LocalDateTime expiredAt;
 

@@ -26,28 +26,49 @@ export default function Dashboard() {
   const [expirationType, setExpirationType] = useState('PERMANENT');
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingUrls, setIsFetchingUrls] = useState(true);
+  const [isInitialCheck, setIsInitialCheck] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (!token) { router.push('/login'); return; }
-    fetchUrls(page);
+
+    if (!token || token === 'undefined' || token === 'null') {
+      localStorage.removeItem('token');
+      router.replace('/login');
+      return;
+    }
+
+    fetchUrls(page).then(() => {
+      setIsInitialCheck(false);
+    }).catch(() => {
+      router.replace('/login');
+    });
   }, [page, router]);
 
+
   const fetchUrls = async (pageNumber: number) => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
     setIsFetchingUrls(true);
     try {
       const res = await api.get<PageResponse<UrlResponseCompleteDto>>(
           `/api/urls?page=${pageNumber}&size=10`
       );
-      setUrls(res.data.content);
-      setTotalPages(res.data.totalPages);
-      setTotalElements(res.data.totalElements);
-    } catch {
-      toast.error('Falha ao carregar URLs.');
+      if (res.data && res.data.content) {
+        setUrls(res.data.content);
+        setTotalPages(res.data.totalPages || 1);
+        setTotalElements(res.data.totalElements || 0);
+      }
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        localStorage.removeItem('token');
+        router.replace('/login');
+      }
     } finally {
       setIsFetchingUrls(false);
     }
   };
+
 
   const handleShorten = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,7 +108,18 @@ export default function Dashboard() {
     router.push('/login');
   };
 
-  const totalClicks = urls.reduce((sum, u) => sum + u.clicks, 0);
+  const totalClicks = urls?.reduce((sum, u) => sum + (u.numClicks || 0), 0) || 0;
+
+  if (isInitialCheck) {
+    return (
+        <div className="flex items-center justify-center h-screen bg-zinc-950">
+          <div className="flex flex-col items-center gap-3">
+            <Zap size={30} className="text-indigo-500 animate-pulse" />
+            <p className="text-zinc-500 text-sm font-medium">Sincronizando ambiente...</p>
+          </div>
+        </div>
+    );
+  }
 
   return (
       <div className="min-h-screen bg-zinc-950 text-zinc-100">
@@ -111,8 +143,8 @@ export default function Dashboard() {
 
           {/* ── STAT CARDS ── */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <StatCard label="URLs criadas" value={totalElements} icon={<LinkIcon size={16} />} />
-            <StatCard label="Cliques totais" value={totalClicks} icon={<BarChart2 size={16} />} />
+            <StatCard label="URLs criadas" value={totalElements || 0} icon={<LinkIcon size={16} />} />
+            <StatCard label="Cliques totais" value={totalClicks || 0} icon={<BarChart2 size={16} />} />
             <StatCard
                 label="Nesta página"
                 value={urls.length}
@@ -140,7 +172,7 @@ export default function Dashboard() {
               >
                 <option value="PERMANENT">Permanente</option>
                 <option value="SEVEN_DAYS">7 Dias</option>
-                <option value="ONE_DAY">24 Horas</option>
+                <option value="THREE_MONTHS">3 Meses</option>
               </Select>
               <Button type="submit" isLoading={isLoading} size="md" className="sm:self-end whitespace-nowrap">
                 <Zap size={14} />
@@ -189,7 +221,7 @@ export default function Dashboard() {
                         )
                         : urls.map((url) => (
                             <tr
-                                key={url.id}
+                                key={url.shortUrl}
                                 className="border-b border-zinc-800/60 hover:bg-zinc-800/30 transition-colors group"
                             >
                               <td className="px-4 py-3.5 max-w-[220px] truncate text-zinc-400" title={url.originalUrl}>
@@ -206,7 +238,7 @@ export default function Dashboard() {
                                 </a>
                               </td>
                               <td className="px-4 py-3.5 text-center">
-                                <span className="font-medium text-zinc-300">{url.clicks}</span>
+                                <span className="font-medium text-zinc-300">{url.numClicks}</span>
                               </td>
                               <td className="px-4 py-3.5 text-center">
                                 <ExpirationBadge type={url.expirationType} />
@@ -257,7 +289,7 @@ export default function Dashboard() {
                           </div>
                       )
                       : urls.map((url) => (
-                          <div key={url.id} className="p-4 space-y-3">
+                          <div key={url.shortUrl} className="p-4 space-y-3">
                             <div className="flex items-start justify-between gap-2">
                               <p className="text-xs text-zinc-500 truncate flex-1" title={url.originalUrl}>
                                 {url.originalUrl}
@@ -281,7 +313,7 @@ export default function Dashboard() {
                                 /{url.shortUrl}
                               </a>
                               <ExpirationBadge type={url.expirationType} />
-                              <span className="text-zinc-600 text-xs">{url.clicks} cliques</span>
+                              <span className="text-zinc-600 text-xs">{url.numClicks} cliques</span>
                               <span className="text-zinc-600 text-xs">{formatDate(url.creationAt)}</span>
                             </div>
                           </div>
