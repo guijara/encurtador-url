@@ -43,7 +43,7 @@ A forma mais simples é utilizando o Docker, que configura automaticamente o Ban
 
 1.  **Clone o repositório** (ou baixe os arquivos):
     ```bash
-    git clone <git@github.com:guijara/encurtador-url.git>
+    git clone <https://github.com/guijara/encurtador-url.git>
     ```
 
 2.  **Inicie o ambiente:**
