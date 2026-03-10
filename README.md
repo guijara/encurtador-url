@@ -2,6 +2,7 @@
 
 Um ecossistema completo para encurtamento, gestão e análise de URLs. Desenvolvido com uma arquitetura desacoplada utilizando Spring Boot 4 no backend e Next.js 15 no frontend, garantindo alta performance, segurança e uma experiência de usuário fluida.
 
+
 ## Tecnologias Utilizadas
 
 ### Backend
@@ -21,12 +22,14 @@ Um ecossistema completo para encurtamento, gestão e análise de URLs. Desenvolv
 * **Lucide React** - Conjunto de ícones minimalistas e elegantes.
 * **Axios** - Cliente HTTP configurado com interceptadores para gestão de tokens JWT.
 
+
 ## Funcionalides do sistema
 * **Sistema de Usuários** - Registro e login com criptografia BCrypt.
 * **Expiração Inteligente** - Escolha entre links Permanentes, de 7 dias ou 3 meses (Gerenciado via Enums no Java).
 * **Dashboard de Analytics** - Acompanhamento do número de cliques e estatísticas de uso.
 * **Segurança de Dados** - Somente o criador da URL pode visualizar estatísticas ou remover o link.
 * **Interface Responsiva** - Dashboard adaptável para dispositivos móveis e desktop.
+
 
 ## Pré-requisitos
 
@@ -46,14 +49,39 @@ A forma mais simples é utilizando o Docker, que configura automaticamente o Ban
 2.  **Inicie o ambiente:**
     Na raiz do projeto, execute:
     ```bash
-    docker-compose up --build
+    docker-compose up -d db --build
     ```
     *Aguarde até ver a mensagem de que a aplicação iniciou na porta 8080.*
 
-3.  **Para parar o ambiente:**
+3. **Iniciar a Backend:**
+   Na pasta /backend, execute:
+   ```bash
+    ./mvnw spring-boot:run -DskipTests
+    ```
+    *A API estará disponível em http://localhost:8080.*
+
+4. **Iniciar o Frontend:**
+   Na pasta /frontend, execute:
+   ```bash
+    npm install
+    npm run dev
+    ```
+    *Acesse a interface em http://localhost:3000*
+
+5.  **Para parar a aplicação:**
+    Na pasta raiz, exexute:
     ```bash
     docker-compose down
     ```
+    Na pasta /backend:
+    ```bash
+    ctrl + c
+    ```
+    Na pasta /frontend:
+    ```bash
+    ctrl + c
+    ```
+
 
 ## Endpoints da API
 
@@ -62,38 +90,15 @@ A forma mais simples é utilizando o Docker, que configura automaticamente o Ban
 
 Cria uma nova conta de usuário.
 
-* **Exemplo de Corpo (JSON):**
-    ```json
-    {
-      "username": "lordeJason",
-      "password": "fu23f02f"
-    }
-    ```
-
 ### 2. Logar usuário
 **POST** `/users/login`
 
 Autentica o usuário e retorna o Token JWT.
 
-* **Exemplo de Corpo (JSON):**
-    ```json
-    {
-      "username": "lordeJason",
-      "password": "fu23f02f"
-    }
-    ```
-
 ### 3. Encurtar uma URL (Privado - Requer Token JWT)
 **POST** `/api/urls`
 
 Envia uma URL longa e recebe o link encurtado associado à sua conta.
-
-* **Exemplo de Corpo (JSON):**
-    ```json
-    {
-      "url": "https://www.google.com"
-    }
-    ```
 
 ### 4. Acessar URL Encurtada
 **GET** `/{codigo}`
@@ -103,6 +108,16 @@ Redireciona (HTTP 302) o visitante para o site original e contabiliza um clique.
 Basta colar a URL encurtada no navegador.
 * **Exemplo:** `http://localhost:8080/aX9z2`
 * **Comportamento:** Redireciona (HTTP 302) para o site original.
+
+### 5. Lista URLs do usuário (Paginado)
+**GET** `/api/urls`
+
+Apresenta as URLs que o usuário possui.
+
+### 6. Deletar uma URL (Privado - Requer Token JWT)
+**DELETE** `/api/urls/{id}`
+
+Remove uma URL.
 
 ---
 Desenvolvido com ☕ e Spring Boot.
